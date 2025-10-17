@@ -16,28 +16,22 @@ The Markdown Viewer is a simple web application that converts a Markdown file (`
    cd markdown-viewer
    ```
 
-3. Open `index.html` in your web browser.
+3. Open `index.html` in your web browser to view the application.
 
 ## Usage
 
-- To view the Markdown from a local file, simply open `index.html` in your browser. The application will load `input.md` by default.
+- To view the Markdown from a local file (`input.md`), simply open `index.html` in your browser.
 - To load Markdown from a URL, append `?url=YOUR_MARKDOWN_URL` to the `index.html` file path in your browser.
-
-### Example
-
-- Local file: `file:///path/to/markdown-viewer/index.html`
-- URL: `file:///path/to/markdown-viewer/index.html?url=https://example.com/your-markdown-file.md`
 
 ## Code Structure
 
-- **index.html**: The main HTML file containing the structure and logic for rendering the Markdown.
-- **input.md**: The default Markdown file used when no URL is provided.
-- **README.md**: Documentation for the project.
-- **LICENSE**: The MIT License for the project.
+- `index.html`: The main HTML file containing the structure and logic for rendering the Markdown content.
+- `input.md`: The default Markdown file used when no URL is specified.
+- The application uses the `marked` library for Markdown parsing and `highlight.js` for syntax highlighting.
 
-### Components and Functionality
+## Functionality
 
-- **Markdown Rendering**: Uses the `marked` library to convert Markdown to HTML.
-- **Syntax Highlighting**: Uses `highlight.js` to apply syntax highlighting to code blocks.
-- **Tabbed Interface**: Allows users to switch between the rendered HTML and the raw Markdown source.
-- **Dynamic Loading**: Fetches Markdown content from a URL if provided, otherwise falls back to the local `input.md` file.
+- The application checks for a `?url=` query parameter to load Markdown from a specified URL.
+- If no URL is provided, it defaults to loading the local `input.md` file.
+- The interface includes tabs to switch between the rendered HTML and the raw Markdown source.
+- The source of the Markdown content is displayed above the content area.

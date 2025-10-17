@@ -21,43 +21,34 @@
     <div id="markdown-source-label"></div>
     <div id="markdown-output"></div>
     <div id="markdown-source"></div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const markdownUrl = urlParams.get('url');
-        const markdownOutput = document.getElementById('markdown-output');
-        const markdownSource = document.getElementById('markdown-source');
         const markdownSourceLabel = document.getElementById('markdown-source-label');
 
         function showTab(tab) {
-            if (tab === 'output') {
-                markdownOutput.style.display = 'block';
-                markdownSource.style.display = 'none';
-            } else {
-                markdownOutput.style.display = 'none';
-                markdownSource.style.display = 'block';
-            }
+            document.getElementById('markdown-output').style.display = tab === 'output' ? 'block' : 'none';
+            document.getElementById('markdown-source').style.display = tab === 'source' ? 'block' : 'none';
         }
 
         function fetchMarkdown(url) {
             fetch(url)
                 .then(response => response.text())
-                .then(data => {
+                .then(markdown => {
+                    document.getElementById('markdown-output').innerHTML = marked.parse(markdown);
+                    document.getElementById('markdown-source').textContent = markdown;
                     markdownSourceLabel.textContent = `Source: ${url}`;
-                    renderMarkdown(data);
+                    showTab('output');
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightBlock(block);
+                    });
                 })
-                .catch(error => console.error('Error fetching markdown:', error));
-        }
-
-        function renderMarkdown(markdownText) {
-            markdownOutput.innerHTML = marked.parse(markdownText);
-            markdownSource.textContent = markdownText;
-            document.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightBlock(block);
-            });
-            showTab('output');
+                .catch(error => {
+                    console.error('Error fetching markdown:', error);
+                    markdownSourceLabel.textContent = 'Error loading markdown from URL.';
+                });
         }
 
         if (markdownUrl) {
@@ -65,11 +56,19 @@
         } else {
             fetch('input.md')
                 .then(response => response.text())
-                .then(data => {
+                .then(markdown => {
+                    document.getElementById('markdown-output').innerHTML = marked.parse(markdown);
+                    document.getElementById('markdown-source').textContent = markdown;
                     markdownSourceLabel.textContent = 'Source: Local file (input.md)';
-                    renderMarkdown(data);
+                    showTab('output');
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightBlock(block);
+                    });
                 })
-                .catch(error => console.error('Error loading local markdown:', error));
+                .catch(error => {
+                    console.error('Error loading local markdown:', error);
+                    markdownSourceLabel.textContent = 'Error loading local markdown file.';
+                });
         }
     </script>
 </body>
