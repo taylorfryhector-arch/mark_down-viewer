@@ -6,32 +6,23 @@ The Markdown Viewer is a simple web application that converts a Markdown file (`
 
 ## Setup and Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/markdown-viewer.git
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd markdown-viewer
-   ```
-
-3. Open `index.html` in your web browser to view the application.
+1. Clone the repository to your local machine.
+2. Open `index.html` in your preferred web browser.
 
 ## Usage
 
-- To view the Markdown from a local file (`input.md`), simply open `index.html` in your browser.
-- To load Markdown from a URL, append `?url=YOUR_MARKDOWN_URL` to the `index.html` file path in your browser.
+- Use the "Markdown" and "HTML" buttons to toggle between the Markdown source and the rendered HTML view.
+- The application displays a live word count badge that updates after every render, using `Intl.NumberFormat` to format the numbers.
 
 ## Code Structure
 
-- `index.html`: The main HTML file containing the structure and logic for rendering the Markdown content.
-- `input.md`: The default Markdown file used when no URL is specified.
-- The application uses the `marked` library for Markdown parsing and `highlight.js` for syntax highlighting.
+- **index.html**: The main HTML file containing the structure and logic for rendering Markdown and HTML views.
+- **input.md**: The Markdown file used for testing and demonstration purposes.
+- **marked**: A library used to parse Markdown into HTML.
+- **highlight.js**: A library used to apply syntax highlighting to code blocks within the rendered HTML.
 
 ## Functionality
 
-- The application checks for a `?url=` query parameter to load Markdown from a specified URL.
-- If no URL is provided, it defaults to loading the local `input.md` file.
-- The interface includes tabs to switch between the rendered HTML and the raw Markdown source.
-- The source of the Markdown content is displayed above the content area.
+- **showMarkdown()**: Displays the raw Markdown content and updates the word count.
+- **showHTML()**: Converts the Markdown content to HTML, applies syntax highlighting, and updates the word count.
+- **updateWordCount()**: Calculates and formats the word count using `Intl.NumberFormat` and updates the display.
