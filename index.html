@@ -9,6 +9,7 @@
         body { font-family: Arial, sans-serif; margin: 20px; }
         #markdown-output, #markdown-source { border: 1px solid #ccc; padding: 20px; display: none; }
         #markdown-tabs button { margin-right: 10px; }
+        #markdown-source-label { font-weight: bold; }
     </style>
 </head>
 <body>
@@ -17,41 +18,59 @@
         <button onclick="showTab('output')">Rendered HTML</button>
         <button onclick="showTab('source')">Markdown Source</button>
     </div>
+    <div id="markdown-source-label"></div>
     <div id="markdown-output"></div>
     <div id="markdown-source"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>
-        const markdownContent = `# Welcome to Markdown Viewer
-
-This is a **Markdown** example for testing purposes. You can try headings, lists, code blocks, and more.
-
-## Features
-
-- Convert Markdown to HTML
-- Syntax-highlight code blocks
-- Display inside a container (#markdown-output)
-
-### Example Code (Python)
-
-\`\`\`python
-def greet(name):
-    print(f"Hello, {name}!")
-
-greet("World")
-\`\`\`
-`;
-
-        document.getElementById('markdown-output').innerHTML = marked.parse(markdownContent);
-        document.getElementById('markdown-source').textContent = markdownContent;
+        const urlParams = new URLSearchParams(window.location.search);
+        const markdownUrl = urlParams.get('url');
+        const markdownSourceLabel = document.getElementById('markdown-source-label');
+        const markdownOutput = document.getElementById('markdown-output');
+        const markdownSource = document.getElementById('markdown-source');
 
         function showTab(tab) {
-            document.getElementById('markdown-output').style.display = tab === 'output' ? 'block' : 'none';
-            document.getElementById('markdown-source').style.display = tab === 'source' ? 'block' : 'none';
+            if (tab === 'output') {
+                markdownOutput.style.display = 'block';
+                markdownSource.style.display = 'none';
+            } else {
+                markdownOutput.style.display = 'none';
+                markdownSource.style.display = 'block';
+            }
         }
 
-        // Initialize with the rendered HTML tab
-        showTab('output');
+        function fetchMarkdown(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    markdownSourceLabel.textContent = `Source: ${url}`;
+                    markdownSource.textContent = data;
+                    markdownOutput.innerHTML = marked(data);
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightBlock(block);
+                    });
+                    showTab('output');
+                })
+                .catch(error => console.error('Error fetching markdown:', error));
+        }
+
+        if (markdownUrl) {
+            fetchMarkdown(markdownUrl);
+        } else {
+            fetch('input.md')
+                .then(response => response.text())
+                .then(data => {
+                    markdownSourceLabel.textContent = 'Source: input.md';
+                    markdownSource.textContent = data;
+                    markdownOutput.innerHTML = marked(data);
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightBlock(block);
+                    });
+                    showTab('output');
+                })
+                .catch(error => console.error('Error fetching markdown:', error));
+        }
     </script>
 </body>
 </html>
